@@ -16,7 +16,7 @@
 	"workspaceFolder": "/home/vscode/workspace",
 
 	// Uncomment the next line to run commands after the container is created.
-	"postCreateCommand": "echo '. /opt/ros/humble/setup.sh' >> ~/.bashrc && . /home/vscode/workspace/tracing_setup.sh",
+	"postCreateCommand": "echo '. /opt/ros/humble/setup.sh' >> ~/.bashrc && . /home/vscode/workspace/tracing_setup.sh && chmod +x /home/vscode/workspace/run_tracing.sh",
 
 	// "postStartCommand": ". /opt/ros/humble/setup.sh",
 
