@@ -14,9 +14,13 @@ Build and open the container.
 
 ## Start the Container with Docker
 
-Run the following command in a terminal that is in the current folder's directory
+Run the following command in a terminal that is in the current folder's directory:
 
-> docker run -it -v .:/home/vscode/workspace ros2_tracing
+> docker build -t ros2_tracing .devcontainer/
+
+Start the container using the following command:
+
+> docker run --network host -it -v .:/home/vscode/workspace ros2_tracing
 
 ## Tracing
 
