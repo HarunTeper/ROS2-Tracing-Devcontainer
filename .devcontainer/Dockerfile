@@ -3,6 +3,9 @@ FROM mcr.microsoft.com/vscode/devcontainers/base:0-${VARIANT}
 
 ENV DEBIAN_FRONTEND=noninteractive
 
+# mount the current folder to the workspace
+VOLUME /home/vscode/workspace
+
 # install locales for UTF-8 support
 RUN apt-get update && apt-get install -y locales && \
     locale-gen en_US.UTF-8 && \
@@ -33,5 +36,25 @@ RUN apt-get install -y lttng-tools liblttng-ust-dev && \
 # set up user for tracing
 RUN groupadd -f -r tracing && \
     usermod -a -G tracing vscode
+
+WORKDIR /home/vscode/workspace
+
+# download ROS2 tracing
+RUN cd /home/vscode && \
+    mkdir -p /home/vscode/ros2_tracing_ws/src && \
+    git clone -b humble https://gitlab.com/ros-tracing/ros2_tracing.git /home/vscode/ros2_tracing_ws/src/
+
+# build ROS2 tracing
+RUN cd /home/vscode/ros2_tracing_ws &&\
+    . /opt/ros/humble/setup.sh &&\
+    colcon build --symlink-install --allow-overriding tracetools
+
+USER vscode
+
+# source ROS2 setup file
+RUN echo '. /opt/ros/humble/setup.sh' >> /home/vscode/.bashrc
+
+# source ROS2 tracing setup file
+RUN echo '. /home/vscode/ros2_tracing_ws/install/setup.sh' >> /home/vscode/.bashrc
 
 SHELL ["/bin/bash", "-c"]
