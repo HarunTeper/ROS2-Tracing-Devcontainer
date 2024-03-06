@@ -45,14 +45,19 @@ RUN groupadd -f -r tracing && \
     usermod -a -G tracing vscode
 
 # download ROS2 tracing
-RUN cd /home/vscode && \
-    mkdir -p /home/vscode/ros2_tracing_ws/src && \
-    git clone -b humble https://gitlab.com/ros-tracing/ros2_tracing.git /home/vscode/ros2_tracing_ws/src/
+RUN mkdir -p /home/vscode/ros2_tracing_ws/src/ros2_tracing && \
+    git clone -b humble https://gitlab.com/ros-tracing/ros2_tracing.git /home/vscode/ros2_tracing_ws/src/ros2_tracing
+    
+# download ROS2 trace analysis
+RUN mkdir -p /home/vscode/ros2_tracing_ws/src/tracetools_analysis && \
+    git clone -b humble https://github.com/ros-tracing/tracetools_analysis.git /home/vscode/ros2_tracing_ws/src/tracetools_analysis
 
 # build ROS2 tracing
 RUN cd /home/vscode/ros2_tracing_ws &&\
     . /opt/ros/humble/setup.sh &&\
     colcon build --symlink-install --allow-overriding tracetools
+
+RUN pip install bokeh jupyter
 
 # --- Set up user ---
 
@@ -68,7 +73,7 @@ RUN echo '. /home/vscode/ros2_tracing_ws/install/setup.sh' >> /home/vscode/.bash
 # configure environment variables
 ENV DISPLAY=unix:1
 ENV ROS_LOCALHOST_ONLY=0
-ENV ROS_DOMAIN_ID=0
+ENV ROS_DOMAIN_ID=1
 
 # --- Set up entrypoint ---
 
