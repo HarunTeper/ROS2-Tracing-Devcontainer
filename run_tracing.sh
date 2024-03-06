@@ -11,5 +11,8 @@ else
     session_name=session_$1
 fi
 
+# get the current path and append traces
+path=$(pwd)'/traces/'
+
 # start the tracing
-ros2 trace -p traces -s $session_name
+ros2 trace -p $path -s $session_name

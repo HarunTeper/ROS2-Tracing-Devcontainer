@@ -16,11 +16,11 @@ Build and open the container.
 
 Run the following command in a terminal that is in the current folder's directory:
 
-> docker build -t ros2_tracing .devcontainer/
+> docker build -t ros2-tracing .devcontainer/
 
 Start the container using the following command:
 
-> docker run --network host -it -v .:/home/vscode/workspace ros2_tracing
+> docker run --network host -it -v .:/home/vscode/workspace ros2-tracing
 
 ## Tracing
 

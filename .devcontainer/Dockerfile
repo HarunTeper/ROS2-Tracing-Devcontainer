@@ -1,10 +1,15 @@
 ARG VARIANT=ubuntu-22.04
 FROM mcr.microsoft.com/vscode/devcontainers/base:0-${VARIANT}
 
+# --- Configure environment ---
+
+# Configure DEBIAN_FRONTEND to avoid warnings
 ENV DEBIAN_FRONTEND=noninteractive
 
-# mount the current folder to the workspace
-VOLUME /home/vscode/workspace
+# set up work directory
+WORKDIR /home/vscode/workspace
+
+# --- Install ROS2 ---
 
 # install locales for UTF-8 support
 RUN apt-get update && apt-get install -y locales && \
@@ -28,6 +33,8 @@ RUN apt-get update && \
 # install ROS2 development tools
 RUN apt-get -y install python3-pip python3-colcon-common-extensions
 
+# --- Install ROS2 tracing ---
+
 # install ROS2 tracing
 RUN apt-get install -y lttng-tools liblttng-ust-dev && \
     apt-get install -y python3-babeltrace python3-lttng && \
@@ -36,8 +43,6 @@ RUN apt-get install -y lttng-tools liblttng-ust-dev && \
 # set up user for tracing
 RUN groupadd -f -r tracing && \
     usermod -a -G tracing vscode
-
-WORKDIR /home/vscode/workspace
 
 # download ROS2 tracing
 RUN cd /home/vscode && \
@@ -49,6 +54,9 @@ RUN cd /home/vscode/ros2_tracing_ws &&\
     . /opt/ros/humble/setup.sh &&\
     colcon build --symlink-install --allow-overriding tracetools
 
+# --- Set up user ---
+
+# set user
 USER vscode
 
 # source ROS2 setup file
@@ -56,5 +64,12 @@ RUN echo '. /opt/ros/humble/setup.sh' >> /home/vscode/.bashrc
 
 # source ROS2 tracing setup file
 RUN echo '. /home/vscode/ros2_tracing_ws/install/setup.sh' >> /home/vscode/.bashrc
+
+# configure environment variables
+ENV DISPLAY=unix:1
+ENV ROS_LOCALHOST_ONLY=0
+ENV ROS_DOMAIN_ID=0
+
+# --- Set up entrypoint ---
 
 SHELL ["/bin/bash", "-c"]
