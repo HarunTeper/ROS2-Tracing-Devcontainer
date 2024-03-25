@@ -73,7 +73,7 @@ RUN echo '. /home/vscode/ros2_tracing_ws/install/setup.sh' >> /home/vscode/.bash
 # configure environment variables
 ENV DISPLAY=unix:1
 ENV ROS_LOCALHOST_ONLY=0
-ENV ROS_DOMAIN_ID=1
+ENV ROS_DOMAIN_ID=0
 
 # --- Set up entrypoint ---
 
