@@ -59,6 +59,12 @@ RUN cd /home/vscode/ros2_tracing_ws &&\
 
 RUN pip install bokeh jupyter
 
+# --- Install DevTools ---
+
+    RUN apt-get update && \
+    apt-get -y install clangd clang-format clang-tidy cppcheck && \
+    pip install pep8 pylint
+
 # --- Set up user ---
 
 # set user
